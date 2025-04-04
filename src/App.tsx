@@ -24,7 +24,12 @@ function App() {
   const [block, setBlock] = useState<keyof typeof taskLists>(getCurrentBlock());
   const [showSubtasks, setShowSubtasks] = useState(false);
   const tasks = taskLists[block];
-  const currentTask: Task | undefined = tasks[index];
+  const today = new Date();
+  const visibleTasks = tasks.filter((task) => {
+    if (!task.startDate) return true;
+    return new Date(task.startDate) <= today;
+  });
+  const currentTask: Task | undefined = visibleTasks[index];
 
   // Automatically return to auto mode
   useEffect(() => {
