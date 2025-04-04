@@ -38,12 +38,16 @@ h1 {
   font-weight: 300;
   line-height: 1.4;
   position: relative;
-  cursor: pointer;
+  cursor: default;
   padding-left: 30px;
 }
 
+/* Only show the hand cursor on tasks that have subtasks (i.e. are clickable) */
+.task.task-has-subtasks {
+  cursor: pointer;
+}
+
 .task-has-subtasks:before {
-  content: "▶";
   font-size: 12px;
   position: absolute;
   left: 0;
@@ -68,6 +72,7 @@ h1 {
   font-size: 16px;
   position: relative;
   padding-left: 40px;
+  cursor: default;
 }
 
 .subtask:before {

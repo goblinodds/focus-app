@@ -1,27 +1,14 @@
-# GOBLIN'S NOTES
+## HOW TO START
+npm run dev
+open the localhost site it tells you to
 
-## POTENTIAL ERRORS
+## HOW TO USE
+create data > private > tasks.ts
+populate it with objects for each of your categories of tasks
 
-i got this error when i tried to make my app, chatgpt suggested it’s fine to ignore
-but if something weird comes up later, keep this in mind!
-
-
-
-(base) Norrington@MacBookPro GitHub % npm create vite@latest
-
-Need to install the following packages:
-create-vite@6.3.1
-Ok to proceed? (y) y
-npm WARN EBADENGINE Unsupported engine {
-npm WARN EBADENGINE   package: 'create-vite@6.3.1',
-npm WARN EBADENGINE   required: { node: '^18.0.0 || ^20.0.0 || >=22.0.0' },
-npm WARN EBADENGINE   current: { node: 'v21.6.2', npm: '10.2.4' }
-npm WARN EBADENGINE }
-│
-◆  Project name:
-│  vite-project
-└
-
+cycles through category of "to do" list according to time of day
+manually override by clicking on preferred tab
+revert to auto mode by clicking on currently selected tab
 
 # React + TypeScript + Vite
 

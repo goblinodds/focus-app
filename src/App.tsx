@@ -22,6 +22,7 @@ function App() {
   const [manualOverride, setManualOverride] = useState(false);
   const [index, setIndex] = useState(0);
   const [block, setBlock] = useState<keyof typeof taskLists>(getCurrentBlock());
+  const [showSubtasks, setShowSubtasks] = useState(false);
   const tasks = taskLists[block];
   const currentTask: Task | undefined = tasks[index];
 
@@ -38,14 +39,20 @@ function App() {
   }, [manualOverride]);
 
   useEffect(() => {
-    document.body.className = `${block}-theme`;
+    document.body.className = (block as string) + '-theme';
   }, [block]);
 
   const handleSkip = () => {
+    setShowSubtasks(false);
     setIndex((i) => i + 1);
   };
 
-  const blocks: (keyof typeof taskLists)[] = ['admin', 'work', 'home', 'fun'];
+  const toggleSubtasks = () => {
+    setShowSubtasks((s) => !s);
+  };
+
+  const blocks = ['admin', 'work', 'home', 'fun'] as const;
+
 
   return (
     <>
@@ -53,7 +60,7 @@ function App() {
         <div className="list-selector">
           {blocks.map((b) => (
             <button
-              key={b}
+              key={String(b)}
               className={`list-button ${block === b ? 'active' : ''}`}
               data-block={b}
               onClick={() => {
@@ -75,19 +82,44 @@ function App() {
       </div>
 
       <div className="container">
+        {!manualOverride && <div className="override-notice">Auto mode (based on time of day)</div>}
         {manualOverride && <div className="override-notice">Manual override active</div>}
 
         <h1>are you down to...</h1>
         {currentTask ? (
           <>
-            <div className={currentTask.subtasks ? 'task task-has-subtasks' : 'task'}>
-              ✦ {currentTask.task}
+            <div className={`task ${currentTask.subtasks ? 'task-has-subtasks' : ''}`} onClick={toggleSubtasks}>
+              {currentTask.subtasks ? (
+                <span>{showSubtasks ? '▾ ' : '▸ '}</span>
+              ) : (
+                <span>✦ </span>
+              )}
+              {currentTask.link ? (
+                <a href={currentTask.link} target="_blank" rel="noopener noreferrer">
+                  {currentTask.task}
+                </a>
+              ) : (
+                <span>{currentTask.task}</span>
+              )}
             </div>
-            {currentTask.subtasks && (
+            {currentTask.subtasks && showSubtasks && (
               <div className="subtasks-container open">
-                {currentTask.subtasks.map((sub, i) => (
-                  <div className="subtask" key={i}>→ {sub}</div>
-                ))}
+                {currentTask.subtasks.map((sub, i) => {
+                  if (typeof sub === 'string') {
+                    return <div className="subtask" key={i}>{sub}</div>;
+                  }
+                  return (
+                    <div className="subtask" key={i}>
+                      {sub.link ? (
+                        <a href={sub.link} target="_blank" rel="noopener noreferrer">
+                          {sub.text}
+                        </a>
+                      ) : (
+                        sub.text
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
             <div className="buttons">
@@ -96,8 +128,7 @@ function App() {
           </>
         ) : (
           <div className="completed">
-            <h2>No more tasks in this list</h2>
-            <button className="reset-button" onClick={() => setIndex(0)}>Start Over</button>
+            <button className="reset-button" onClick={() => setIndex(0)}>start over</button>
           </div>
         )}
       </div>
